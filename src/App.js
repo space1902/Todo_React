@@ -13,25 +13,33 @@ const defaultTodo = [{text:"Cortar cebolla", completed:false},
 
 function App() {
 
-  const [todo, setTodos] = React.useState(defaultTodo);
+  const [todos, setTodos] = React.useState(defaultTodo);
   const [serchValue, setserchValue] = React.useState('');
-  const completeTodo = todo.filter(todos => !!todos.completed).length;
-  const totalTodo = todo.length;
+  const completeTodos = todos.filter(todo => !!todo.completed).length;
+  const totalTodos = todos.length;
 
   let searchTodos = [];
 
 
-  if (searchTodos.length >= 1){
-    
+  if (!serchValue.length >= 1){
+    searchTodos = todos;
+
   }else{
-    searchTodos = todo;
+    searchTodos = todos.filter(todo => {
+    const todoText = todo.text.toLowerCase();
+    const searchText = serchValue.toLowerCase();
+
+    return todoText.includes(searchText);
+    
+  });
   }
+
   return (
     <React.Fragment>
       <TodoTitle/>
       <TodoCounter
-        total={totalTodo}
-        completed={completeTodo}
+        total={totalTodos}
+        completed={completeTodos}
         />
       {/* <h2>Has completado 2 todo</h2> */}
 
@@ -40,11 +48,11 @@ function App() {
         setserchValue={setserchValue}/>
       {/* <input placeholder="cebolla" /> */}
         <TodoList> 
-        {searchTodos.map(todo => (
+        {searchTodos.map(todos => (
           <TodoItem 
-            key={todo.text} 
-            text={todo.text}
-            completed={todo.completed}/>
+            key={todos.text} 
+            text={todos.text}
+            completed={todos.completed}/>
         ))}
       </TodoList>
 
