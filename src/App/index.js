@@ -6,19 +6,37 @@ import {AppUi} from "./AppUi";
               {text:"Picar cebolla", completed:false},
               {text:"Cocinar cebolla", completed:true}]; */
 
+  function useLocalStorage(itemName, initialValue) {
+
+    const localStorageItem = localStorage.getItem(itemName);
+    let parsedItem;
+  
+    if(!localStorageItem){
+      localStorage.setItem(itemName, JSON.stringify([]));
+      parsedItem = [];
+    }else{
+      parsedItem = JSON.parse(localStorageItem);
+    }
+
+    const [item, setItem] = React.useState(parsedItem );
+
+    const saveItem= (newItem) => {
+      const stringfiedItem = JSON.stringify(newItem);
+      localStorage.setItem(itemName, stringfiedItem);
+      setItem(newItem);
+    }
+
+    return [
+      item, saveItem
+    ]
+  }
+  
+  
+
 function App() {
 
-  const localStorageTodo = localStorage.getItem('Todos_V1');
-  let parsedTodo;
+  const [todos, saveTodos] = useLocalStorage('Todos_V1', []);
 
-  if(!localStorageTodo){
-    localStorage.setItem('Todos_V1', JSON.stringify([]));
-    parsedTodo = [];
-  }else{
-    parsedTodo = JSON.parse(localStorageTodo);
-  }
-
-  const [todos, setTodos] = React.useState(parsedTodo);
   const [serchValue, setserchValue] = React.useState('');
   const completedTodos = todos.filter(todo => !!todo.completed).length;
   const totalTodos = todos.length;
@@ -39,11 +57,7 @@ function App() {
   });
   }
 
-  const saveTodos = (newTodos) => {
-    const stringfiedTodos = JSON.stringify(newTodos);
-    localStorage.setItem('Todos_V1', stringfiedTodos);
-    setTodos(newTodos);
-  }
+  
 
   const completeTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
@@ -58,6 +72,14 @@ function App() {
     newTodos.splice(todoIndex, todoIndex + 1);
     saveTodos(newTodos);
   };
+
+  console.log('Render antes del useEffect');
+  
+  React.useEffect(() => {
+    console.log('use effect ejecutandose');
+  });
+
+  console.log('Render despues del useEffect');
 
   return (
     <AppUi
