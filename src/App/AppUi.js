@@ -15,7 +15,9 @@ function AppUi(){
     loading,
     searchTodos,
     completeTodo,
-    deleteTodo} = React.useContext(TodoContext);
+    deleteTodo,
+    openModal,
+    setOpenModal} = React.useContext(TodoContext);
 
     return (
         
@@ -40,11 +42,14 @@ function AppUi(){
           ))}
         </TodoList>
 
+          {!!openModal && (
             <Modal>
-              <p>Esto se debe ver</p>
+              <p>{searchTodos[0]?.text}</p>
             </Modal>
+          )}
 
-    <CreateTodoButton/>
+    <CreateTodoButton
+      setOpenModal={setOpenModal}/>
   </React.Fragment>
 
     );
